@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- <link rel="stylesheet" href="../reset.css"> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        //jquery는 $와 같은 레퍼런스를 갖는다.
+        //즉, jQuery == $이다.
+        //jQuery는 $(function(){body를 모두 읽고 난 이후 실행}), $("css선택자") 주로 크게 두가지 방식으로 사용한다.
+        //jQuery(function(){}); jQuery("선택자"); 위의 $와 같은 방식이다.
+        //jQuery함수 호출시 함수를 전달인자로 넣으면 body를 모두 읽고 난 이후 실행하라는 소리
+        //jQuery함수 호출시 css선택자를 string타입으로 전달하면 jQuery 객체를 만들겠다는 소리이다.
+
+        // 객체들은 속성들의 모임, 속성들을 사용하기 위해서 만든다.
+        
+        // var obj = {x:1 , y:2}
+        // obj.x.x -- 이런식으로 사용하려면 x:{x:2}; 이렇게 있어야 가능
+
+        //var obj1 = {x1:kk}
+        //var obj2 = {x2:kk}
+
+        //function kk(){ this.x} -지금의 this는 아무것도 아님
+        //obj1.x1(); -실행했을때 this는 obj1
+        //obj2.x2(); -실행했을때 this는 obj2
+
+        $(function(){
+            var ss = document.getElementById("tit");
+            ss.innerHTML="<strong>룰루랄라</strong>";
+
+            $("h1").css("font-size",16).text("").html("<span>타이틀</span>").next("p");
+            //$("h1").css("color","red").css("font-size",16).text("글자를 넣는다.").html("<span>타이틀</span>").next("p");
+            //숫자만 적을시 알아서 폰트 사이즈를 가져감. 다른 수치일시 "1rem"이런식으로 작성
+            //.속성 적용이후 계속해서 this(jQuery 객체)를 계속해서 return해줌 
+            //전달인자가 작성이 안되어있으면 가져오는것
+
+            //getter , setter
+            //$("h1").css("color","red").text(); css는 setter, text는 getter
+            //getter가 중간에 들어가면 더이상 실행이 불가능
+            //setter - 제이쿼리 객체 / getter - 자기가 가지고 오고싶은 것을 가져오기떄문에 메소드 체이닝 연결이 안됨
+            //작성시 기존 내용은삭제되고 대체되서 들어가는것.
+            //ex $("h1").css("color","red").css("font-size").text("글자를 넣는다") - 오류남
+
+
+            //traversing 메소드
+            //자주사용하는 traversing메소드들
+            //next() 다음, prev() 이전, nextAll() 다음 전부, prevAll() 이전전부, siblings() 선택된 객체의 형제들(본인빼고 형제만) - 형제들만 가능
+            //children() 자식들만, parent() 부모, find(전달인자가 꼭 필요) 자손, parents() - 자손
+            //.eq(번지수 입력) -nth-of-type과 비슷 / 0번지부터 시작 , .end() -현재 전달인자를 끝내고 그 앞으로 돌아감(현재선택되어있던 갹체를 끝내고 그 앞으로) , .not(전달인자) , last() , first() ...
+
+            $("h1").nextAll("ul").find("li").eq(0).end().not("li:eq(2)")
+            //end가되면 li로 돌아감
+            //여러개 한번에 고르려먄 class 설정하는게 좋음
+
+            //트래벌싱과 메소드 체이닝
+            $("h1").css({"color":"green","font-size":30}).next().next().css("font-size",50).nextAll().last().css("text-decoration","underline").prevAll().first().css("border","1px solid green").prevAll("ul").children("li").eq(1).find("li").not("li:eq(1)").css("border","1px solid green").parents().eq(2).css("background","red");
+        });
+    </script>
+</head>
+<body>
+    <h1 id="tit">jquery 시작</h1>
+    <p>jquery 메소드 체이닝 - 객체가 여러가지 메소드를 한번에 사용한다.</p>
+    <p>jquery traversing - 객체가 메소드를 사용하면서 변경 가능하다.</p>
+    <!-- (ul>li*5>a+ul>li*3)+p+h2+p+p+h3+p+p -->
+
+    <ul>
+        <li>
+            <a href="#">AAA</a>
+            <ul>
+                <li>a-1</li>
+                <li>a-2</li>
+                <li>a-3</li>
+            </ul>
+        </li>
+        <li>
+            <a href="#">BBB</a>
+            <ul>
+                <li>b-1</li>
+                <li>b-2</li>
+                <li>b-3</li>
+            </ul>
+        </li>
+        <li>
+            <a href="#">CCC</a>
+            <ul>
+                <li>c-1</li>
+                <li>c-2</li>
+                <li>c-3</li>
+            </ul>
+        </li>
+        <li>
+            <a href="#">DDD</a>
+            <ul>
+                <li>d-1</li>
+                <li>d-2</li>
+                <li>d-3</li>
+            </ul>
+        </li>
+        <li>
+            <a href="#">EEE</a>
+            <ul>
+                <li>e-1</li>
+                <li>e-2</li>
+                <li>e-3</li>
+            </ul>
+        </li>
+    </ul>
+    <p>하단 단락1</p>
+
+    <h2>두번째 제목</h2>
+    <p>하단 단락2</p>
+    <p>하단 단락3</p>
+
+    <h3>세번째 제목</h3>
+    <p>하단 단락4</p>
+    <p>하단 단락5</p>
+</body>
+</html>
