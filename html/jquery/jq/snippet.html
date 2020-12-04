@@ -57,7 +57,8 @@
             //트래벌싱과 메소드 체이닝
             $("h1").css({"color":"green","font-size":30}).next().next().css("font-size",50).nextAll().last().css("text-decoration","underline").prevAll().first().css("border","1px solid green").prevAll("ul").children("li").eq(1).find("li").not("li:eq(1)").css("border","1px solid green").parents().eq(2).css("background","red");
 
-            //h1부터
+            //h1부터 시작해서 c-1, c-2의 글자 색상을 흰색, font-size는 50px로 변경
+            $(h1).nextAll("ul").children("li").eq(2).find("li").not("li:last(").css({"color":"#fff","font-size":50})
         });
     </script>
 </head>
