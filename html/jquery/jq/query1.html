@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(function(){
+            var txt = $("h1").text(); //getter는 저장해줘야한다.
+            var time = new Date();
+            txt += "를(을) "+time.getFullYear()+"-"+(time.getMonth()+1)+"-"+time.getDate() + "에 배우는 jQuery";
+            //console.log(txt);
+            $("p").text(txt);
+
+            //h1의 글자크기를 가져와서 글자크기를 2배로 만드시오.
+            var fontS = parseInt($("h1").css("font-size")); //parseInt(전달인자); - string등의 전달인자를 숫자화한다.
+            console.log(fontS); //32px string임
+            $("h1").css("font-size",fontS*2);
+            
+            //li의 글자 크기를 각각 x2, x3, x4, x5, x6배율로 지정하시오.
+            // var fontS1 = parseInt($("li").css("font-size"));
+            // $("li").eq(0).css("font-size",fontS1*2);
+            // $("li").eq(1).css("font-size",fontS1*3);
+            // $("li").eq(2).css("font-size",fontS1*4);
+            // $("li").eq(3).css("font-size",fontS1*5);
+            // $("li").eq(4).css("font-size",fontS1*6);
+
+            //var len = document.getElementsByTagName("li").length
+            var len = $("li").length;
+            for(var i = 0; i<len; i++){
+                var tmpSize = parseInt($("li").eq(i).css("font-size"));
+                $("li").eq(i).css("font-size", tmpSize*(i+2));
+            }
+
+            //aaa는 공부중 ,bbb는 식사중, ccc는 노래중, ddd는 운동중, eee는 자는중
+            
+            var ings = ["공부중", "식사중", "노래중", "운동중", "자는중"]
+            var lens = $("li").length;
+            for(var p = 0; p<lens; p++){
+                var tmptext= $("li").eq(p).text();
+                $("li").eq(p).text(tmptext+"는 "+ings[p]);
+            }
+
+            // 각 li의 속성과 값을 변경해 본다.
+            //첫번째 li는 color, red
+            //두번째 li는 background, yellow
+            //세번째 li는 border, 1px solid green
+            //네번째 li는 text-decoration, underline
+            //다섯번째 li는 font-style, italic
+
+            // $("li").eq(0).css("color","red");
+            // $("li").eq(1).css("background","yellow");
+            // $("li").eq(2).css("border","1px solid green");
+            // $("li").eq(3).css("text-decoration","underline");
+            // $("li").eq(4).css("font-style","italic");
+
+            // var styles = [{"color":"red"},{"background":"yellow"},{"border":"1px solid green"},{"text-decoration":"underline"},{"font-style":"italic"}]
+
+            // for(var s = 0; s<lens; s++){
+            //     $("li").eq(s).css(styles[s]); //css는("속성","값"), css({속성:값,,,})
+            // }
+
+            var properties = ["color", "background", "border", "text-decoration", "font-style"]
+            var values = ["red", "yellow", "1px solid green", "underline", "italic"]
+            // for(var s = 0; s<lens; s++){
+            //     $("li").eq(s).css(properties[s], values[s]);
+            // }
+
+            //jQuery만의 for문을 each라고 한다.
+            $("li").each(function(i,v){
+                //$("li").eq(i).css(properties[i], values[i]);
+                //$(v).css(properties[i], values[i]);
+                $(this).css(properties[i], values[i]); // v나 this는 자스 문법이기때문에 $("")에 감싸줘야 제이쿼리 문법이 된다.
+            });
+        });
+        //제이쿼리 레디상태 한번만 쓰는게 좋음
+    </script>
+</head>
+<body>
+    <h1>getter, setter 및 each</h1>
+    <ul>
+        <li>aaa</li>
+        <li>bbb</li>
+        <li>ccc</li>
+        <li>ddd</li>
+        <li>eee</li>
+    </ul>
+    <p></p>
+</body>
+</html>
