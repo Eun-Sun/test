@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div{
+            width: 300px;
+            height: 600px;
+            border: 1px solid red;
+            transition: all .3s ease; /*애니메이션이 on에 있을땐 진행시에만 적용되기때문에 transition은 기본 div에 줘야함*/
+        }
+        div.on{
+            width: 1000px;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(function(){
+            var flag = true;
+            $("h1").click(function(){
+                if(flag){
+                    //$("div").css("width",1000);
+                    $("div").addClass("on");
+                    flag = !flag; //false
+                }else{
+                    //$("div").css("width",300);
+                    $("div").removeClass("on"); //class선택자에 .붙이지 않기!
+                    flag = !flag;//true -- 왔다갔다 하는 것이 토글
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>jQuery 이벤트</h1>
+    <div></div>
+</body>
+</html>
