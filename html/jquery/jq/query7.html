@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../reset.css">
+    <style>
+        #mainBanner{
+            position: relative;
+            margin: 0 auto;
+            width: 800px;            
+        }
+        #mainBanner>div.bannerBox{
+            
+        }
+        #mainBanner>div.bannerBox>ul.bannerList{
+            position: relative;
+            height: 500px;
+        }
+        #mainBanner>div.bannerBox>ul.bannerList>li{
+            position: absolute;
+            top: 0; left: 0;
+        }
+        #mainBanner>p.btn_prev{
+            position: absolute;
+            left: 20px; top: calc(40% - 40px);
+            font: bold 80px/80px arial, sans-serif;
+            color: #fff;
+        }
+        #mainBanner>p.btn_next{
+            position: absolute;
+            right: 20px; top: calc(40% - 40px);
+            font: bold 80px/80px arial, sans-serif;
+            color: #fff;
+        }
+        #mainBanner>ul.bannerThumnails{
+            display: flex;
+            margin: 0 auto;
+            width: 440px;
+        }
+        #mainBanner>ul.bannerThumnails>li{
+            flex: 0 0  auto;
+            border: 5px solid #fff;
+            width: 100px;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(function(){
+
+        });
+    </script>
+
+</head>
+<body>
+    <!-- div>(div>ul>li*4>a>img)+p*2+ul>li*4>img -->
+    <aside id="mainBanner">
+        <h1 class="hidden">메인배너</h1>
+        <div class="bannerBox">
+            <ul class="bannerList">
+                <li><a href=""><img src="../imgs/aven01_B.jpg" alt="배너1"></a></li>
+                <li><a href=""><img src="../imgs/aven02_B.jpg" alt="배너2"></a></li>
+                <li><a href=""><img src="../imgs/aven03_B.jpg" alt="배너3"></a></li>
+                <li><a href=""><img src="../imgs/aven04_B.jpg" alt="배너4"></a></li>
+            </ul>
+        </div>
+        <p class="btn_prev">&lt;<span class="hidden">이전 배너로 이동</span></p>
+        <p class="btn_next">&gt;<span class="hidden">다음 배너로 이동</span></p>
+        <ul class="bannerThumnails">
+            <li><img src="../imgs/aven01.jpg" alt="배너1 썸네임"></li>
+            <li><img src="../imgs/aven02.jpg" alt="배너2 썸네임"></li>
+            <li><img src="../imgs/aven03.jpg" alt="배너3 썸네임"></li>
+            <li><img src="../imgs/aven04.jpg" alt="배너4 썸네임"></li>
+        </ul>
+    </aside>
+</body>
+</html>
