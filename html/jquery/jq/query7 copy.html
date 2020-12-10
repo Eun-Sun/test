@@ -64,41 +64,57 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
         $(function(){
-            //eq의 숫자를 변경할 변수
-            var banner = {idx:0,  len:$(".bannerList").children("li").length}
 
-            //1.이벤트 선택
-            $(".btn_next").click(function(){
+            //변수1 = setInterval(함수, 시간); -함수를 시간에 맞춰 자동함수로 진행가능.
+            //clearInterval(변수1) 자동함수를 멈추는 것 
+
+            var banner = {  idx:0, 
+                            len:$(".bannerList").children("li").length,
+                            auto:setInterval(middle,3000) //setInterval안에서 함수는 이름만 들어감.호출x, 클릭을 해야만 banner.idx가 변화되기때문에 banner.idx의 움직임을 나타내는 함수가 하나 더 필요함(middle) 
+            }
+            function make(){
+                            $(".bannerList").children("li").eq(banner.idx).fadeIn(500).siblings("li").fadeOut(500);
+                            $(".bannerThumnails").children("li").eq(banner.idx).addClass("on").siblings("li").removeClass("on");
+                            }
+
+            function middle(){
                 banner.idx++;
-                //갯수는 번지수보다 1개가 항상 많기때문에 -1을 해야함.(배열에서 -1하는것도 가능)
-                if(banner.idx>banner.len-1){
-                    banner.idx = 0;
+                if(banner.idx > banner.len-1){
+                    banner.idx = 0
                 }
+                make()
+                //클릭을 대신해주는 역할
+            }
+            //객체 안으로 들어가면 hoisting이 안되서 밖으로뺌. make, middle.
+            //공통적으로 움직이는 아이들은 함수로 만들어서 각각 연결하는게 더 간결해짐
 
-                //자동애니메이션을 하려면 display:none으로 움직인다.
-                $(".bannerList").children("li").eq(banner.idx).fadeIn(500).siblings("li").fadeOut(500);
-                //next는 끝까지 가면 돌아갈 수 없지만 eq는 앞으로 돌아가는게 가능
-                $(".bannerThumnails").children("li").eq(banner.idx).addClass("on").siblings("li").removeClass("on");
-            }); //next end
-
-            $(".btn_prev").click(function(){
+            $(".btn_prev").click(function(){ 
+                clearInterval(banner.auto);               
                 banner.idx--;
-                if(banner.idx<0){
-                    banner.idx = banner.len-1;
+                if(banner.idx < 0){
+                    banner.idx = banner.len-1
                 }
-                $(".bannerList").children("li").eq(banner.idx).fadeIn(500).siblings("li").fadeOut(500);
-                $(".bannerThumnails").children("li").eq(banner.idx).addClass("on").siblings("li").removeClass("on");
-            }); //prev end
-
-            $(".bannerThumnails").children("li").click(function(){
-                //객체.index() ==> 객체가 형제요소와 같이있을때 순번지를 return하는 grtter메소드
-                //getter이기 때문에 method chaining을 사용할 수 없다.
-                banner.idx = $(this).index();
-                //this 선택한 임의의 객체를 가져옴
-
-                $(".bannerList").children("li").eq(banner.idx).fadeIn(500).siblings("li").fadeOut(500);
-                $(".bannerThumnails").children("li").eq(banner.idx).addClass("on").siblings("li").removeClass("on");
+                make();
+                banner.auto = setInterval(middle,3000);
             });
+
+            $(".btn_next").click(function(){ 
+                clearInterval(banner.auto);
+                banner.idx++;
+                if(banner.idx > banner.len-1){
+                    banner.idx = 0
+                }
+                make();
+                banner.auto = setInterval(middle,3000);
+            });
+
+            $(".bannerThumnails").children("li").click(function(){ 
+                clearInterval(banner.auto);
+                banner.idx = $(this).index();
+                make();
+                banner.auto = setInterval(middle,3000);
+            });
+            
         });
     </script>
 
