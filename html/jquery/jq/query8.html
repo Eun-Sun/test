@@ -10,7 +10,9 @@
         }
         body{
             background: url(../imgs/maxresdefault.jpg) no-repeat 50% 50%;
+            background-size: 120% auto;
         }
+        h1{color:#fff}
 
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -18,39 +20,58 @@
         $(function(){
             //마우스가 움직일때 배경이 움직임.
             //움직이는 이미지를 하려면 스크린의 크기와 이미지의 크기를 알아야함
+            //왼쪽상단의 위치를 알아야함
 
             //윈도우 크기 알아내기
-            var w = $(window).width()/2;
-            var h = $(window).height()/2;
+            var w = $(window).width()/2; //parseInt추가
+            var h = $(window).height()/2; //parseInt추가
             //alert(w+"/"+h);
 
+            var imgW, imgH, baseX, baseY; //동등연산자
+
             //이미지 크기 알아내기
-            //$("body").css("background-size") - 이렇게 이미지 사이즈 못찾아냄.
+            //$("body").css("background-size") - 이렇게만으론 이미지 사이즈 못찾아냄. 저장 필수 -getter이기때문
             var url = $("body").css("background-image");
-            var idx1 = url.indexOf("(")+2;
-            var idx2 = url.indexOf(")")-1;
+            var idx1 = url.indexOf("(")+2; //("이후를 
+            var idx2 = url.indexOf(")")-1; //")이전을
             url = url.substring(idx1,idx2);
             $("<img src='"+url+"' id='tmpId' />").appendTo($("body"));
+            //선택자가 들어가면 선택하는것이고, 태그가 들어가면 제이쿼리 객체로 만들어지면서 태그가 삽입됨.
 
             setTimeout(function(){
                 
-                var imgW = $("body").children("#tmpId").width()/2;
-                var imgH = $("body").children("#tmpId").height()/2;
+                imgW = $("body").children("#tmpId").width()/2; //parseInt추가
+                imgH = $("body").children("#tmpId").height()/2; //parseInt추가
                 //alert(imgW+"/"+imgH);
                 if(imgW != 0 && imgH != 0){
                     //객체.remove()-->객체 삭제하기
                     $("#tmpId").remove();
                     //alert(imgW+"/"+imgH);
                 }
-            },1);
+                //배경이미지 중앙으로 보내는 왼쪽 상단 위치 지정하기
+                baseX = w - imgW;
+                baseY = h - imgH;
+                
+                //console.log(baseX+"/"+baseY);
+
+            },1); // 1/1000초
+            //setInterval은 시간마다 계속 , setTimeout은 시간이되면 한번만
             
 
-
+            
             $(window).mousemove(function(e){
                 //e를 쓰면 정보를 받겠다는 의미. 안쓰면 정보 안받겠다는 의미.
-                var poseX = e.pageX; //사라지는 정보이기때문에 저장을 해야함
-                var poseY = e.pageY;
+                
+                // 중앙으로부터 마우스 커서가 떨어진 값
+                var poseX = (w - e.pageX)*0.05; //사라지는 정보이기때문에 저장을 해야함
+                var poseY = (h - e.pageY)*0.05;
+
+                //중앙을 중심으로 움직이게끔 설정
+                //baseX
+                //baseY
+
                 $("h1").text(poseX+"/"+poseY);
+                $("body").css("background-position",(baseX+poseX)+"px "+(baseY+poseY)+"px");
             });
 
         });
