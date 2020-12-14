@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../reset.css">
+    <style>
+        aside{
+            overflow: hidden;
+            position: relative;
+            margin: 0 auto;
+            width: 432px;
+            height: 442px;
+        }
+        aside>div>ul.bannerList>li.on{
+            z-index: 500;
+        }
+        aside>div>ul.bannerList>li.past{
+            z-index: 400;
+        }
+        aside>div>ul.bannerList>li{
+            position: absolute;
+            left: 0; top: 0;
+        }
+        
+        aside>div>ul.bannerBullet{
+            z-index: 1000;
+            position: absolute;
+            left: 0; bottom: 20px;
+            width: 100%;
+            text-align: center;
+        }
+        aside>div>ul.bannerBullet>li{
+            display: inline-block;
+            /* text-align은 블럭요소에게 주고 인라인요소가 그 효과를 가짐 */
+            margin: 0 6px;
+        }
+        aside>div>ul.bannerBullet>li>a>img{
+            width: 15px;
+        }
+
+        aside>div>p.btnPlay{
+            z-index: 1000;
+            position: absolute;
+            right: 20px; bottom: 20px;
+        }
+        aside>div>p.btnPlay>img{
+            width: 10px;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(function(){
+            
+                var banner = { idx:0, past_idx:0, bannerList :$(".bannerList"), bannerBullet : $(".bannerBullet"), btnPlay : $(".btnPlay"), auto:setInterval(middleBanner,3000), flag:true }
+
+                function middleBanner(){ //doBanner의 idx를 증가시킬 함수
+                    banner.idx++;
+                    if(banner.idx >= $(".bannerList").children("li").length){
+                        banner.idx = 0;
+                    }
+                    doBanner();
+                    banner.past_idx = banner.idx;
+
+                }
+
+                function doBanner(){
+                    banner.bannerList.children("li").eq(banner.past_idx).addClass("past").siblings().removeClass("past");
+                    banner.bannerList.children("li").eq(banner.idx).css("left","100%").addClass("on").animate({"left":0},500).siblings().removeClass("on");
+                
+                    var _onSrc = banner.bannerBullet.children("li").eq(banner.idx).find("img").attr("src");
+                    _onSrc = _onSrc.replace("_off","_on");
+                    banner.bannerBullet.children("li").eq(banner.idx).find("img").attr("src",_onSrc);
+                    
+                    banner.bannerBullet.children("li").not("li:eq("+banner.idx+")").each(function(){
+                        var _this = $(this);
+                        var src = _this.find("img").attr("src"); //attr 속성을 가져와라
+                        src = src.replace("_on","_off"); //src가 바뀌는게 아니고 대체되기만할뿐이라 저장을 해야함
+                        _this.find("img").attr("src",src);
+                    });    
+                }
+
+                //자동은 수동이 완성되고 한뒤에 만드는것이 편함.
+                //배너불릿과 먼저 연결하고, 그 뒤에 스탑버튼으로 넘어가기
+                banner.bannerBullet.children("li").click(function(e){
+                    e.preventDefault();
+                    clearInterval(banner.auto);
+                    banner.idx = $(this).index(); //index는 단수만 들어갈수있음 this때문에 doBanner 함수로 갈수 없음
+                    banner.past_idx; //이전에 클릭했던 번호 기억
+                    
+                    doBanner();
+                    banner.auto = setInterval(middleBanner,3000);
+                    banner.past_idx = banner.idx; //현재 클릭했던 것에 과거를 기억하는 변수에 저장
+
+                });
+
+                banner.btnPlay.click(function(){
+                    var src = $(this).find("img").attr("src");
+                    if(banner.flag){
+                        clearInterval(banner.auto);
+                        src = src.replace("_pause","_play");
+                        banner.flag = false;                        
+                    }else{
+                        banner.auto = setInterval(middleBanner,3000);
+                        src = src.replace("_play","_pause");
+                        banner.flag = true;
+                    }                    
+                    $(this).find("img").attr("src",src);   
+                });
+
+        });
+    </script>
+</head>
+<body>
+    <h1>웹접근성연구소</h1>
+    <!-- saide>h1+div>(ul.banner>li*5>a[href="#"]>img[src="../imgs/pc_visual0$.jpg" alt="메인배너$"])+(ul.bannerBullet>li*5>a[href="#"]>img[src="../imgs/circle_.png" alt="$번 배너이동 이미지"])+p.btnplay>img -->
+    <aside>
+        <h1></h1>
+        <div>
+            <ul class="bannerList">
+                <li class="on"><a href="#"><img src="../imgs/pc_visual01.jpg" alt="메인배너1"></a></li>
+                <li><a href="#"><img src="../imgs/pc_visual02.jpg" alt="메인배너2"></a></li>
+                <li><a href="#"><img src="../imgs/pc_visual03.png" alt="메인배너3"></a></li>
+                <li><a href="#"><img src="../imgs/pc_visual04.jpg" alt="메인배너4"></a></li>
+            </ul>
+            <ul class="bannerBullet">
+                <li><a href="#"><img src="../imgs/circle_on.png" alt="1번 배너이동 이미지"></a></li>
+                <li><a href="#"><img src="../imgs/circle_off.png" alt="2번 배너이동 이미지"></a></li>
+                <li><a href="#"><img src="../imgs/circle_off.png" alt="3번 배너이동 이미지"></a></li>
+                <li><a href="#"><img src="../imgs/circle_off.png" alt="4번 배너이동 이미지"></a></li>
+            </ul>
+            <p class="btnPlay"><img src="../imgs/btn_pause.png" alt="재생 및 일시정지"></p>
+        </div>
+    </aside>
+</body>
+</html>

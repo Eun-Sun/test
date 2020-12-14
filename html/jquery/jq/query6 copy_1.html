@@ -65,7 +65,13 @@
             //이벤트 선택할 요소
             var mask = $(".mask"); //계속 사용할 예정이라 저장
             var container = $("#container");
+            var maskData = [];
+
+            mask.each(function(i,v){
+                maskData.push({"left":container.width()/mask.length*i});
+            });
             //on을 이용한 이벤트 사용할 때는 부모요소(container요소)가 부모요소.on("이벤트명 1개","부모요소의 자식선택자",function(){});
+
 
             //부모요소.on({"이벤트":function(){},"이벤트2":function(){}},"부모요소의 자식선택자")
             //이벤트연결객체의 부모요소
@@ -73,23 +79,38 @@
 
             container.on({"mouseenter":function(){
                 //1. 내가 어디에 들어갔는지 알아내야 한다.
-                doFlex($(this).index())
+                doFlex($(this).index());
+                //console.log( $(this).index() );
             },"mouseleave":function(){
-
+                doFlex(-1);
             }},".mask");
 
             function doFlex(idx){
                 //현재 마우스가 들어간 번호를 전달 받으면 내것과 내것이 아닌 것들을 비교한다.
                 //i<숫자 --> 오른쪽 요소들이고 그 이외라면 왼쪽요소들이다.
                     var w = container.width();
+                    var h = container.height();
                     var lft;
+                    //console.log(w);
 
                 mask.each(function(i,v){
-                    if(idx<i){ //오른쪽으로 이동하는 아이들
-                        lft = w*(1-0.1*( mask.length - i)); //1이 100%, i 숫자가 커질수록 더 숫자가 작아져야함
+                    var _this = $(this);
+                    if(idx==-1){
+                        lft = w/mask.length*i;
+                    }else if(idx<i){ //오른쪽으로 이동하는 아이들
+                        lft = w*(1-0.1*( mask.length - i)); //1이 100%, i 숫자가 커질수록 더 숫자가 작아져야함 - 규칙외우기
                     }else{ //왼쪽으로 이동하는 아이들
-
+                        lft = w*(0.1*i);
                     }
+
+
+                    //console.log("rect(0,"+w+"+px,"+h+"px,"+lft+"px)");
+
+                    $(maskData[i]).stop(true,false).animate({"left":lft},{duration:1000,progress:function(){
+                        //this.left; //css left아니고 위에 maskData.push({"left":0})의 left
+                        _this.css("clip","rect(0,"+w+"px,"+h+"px,"+this.left+"px)"); //바로 위의 this와 _this는 다른 객체임
+                    }});
+
                 });
 
             }

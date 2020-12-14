@@ -1,14 +1,10 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="ko">
 
     <head>
 
         <meta charset="UTF-8">
-
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
         <title>Document</title>
 
@@ -16,81 +12,109 @@
 
         <style>
 
-            body > div.outer {
+            /* body>h1{ position:absolute;
+
+            
+
+            width:300px; height:300px;
+
+            border:1px solid green;
+
+            background: orange;
+
+            clip: rect(0, 150px, 300px, 100px);  rect(top, right, bottom, left) 각 전달인자 값은 모두 왼쪽과 상단으로부터의 거리이다.
+
+                clip은 fixed와 absolute요소에만 적용가능하다.
+
+            
+
+        } */
+
+            body > div {
 
                 position: relative;
 
                 margin: 100px auto 0;
 
                 width: 1000px;
-                height: 500px;
+                height: 600px;
 
-                background: #000;
                 background: #000;
 
             }
 
-            div > article {
+            body > div > article {
 
                 position: absolute;
-
                 left: 0;
                 top: 0;
-
-                width: 100%;
-                height: 100%;
-
-            }
-
-            div > article:nth-child(1) {
-
-                background: url("../imgs/bg_1.jpg") no-repeat 0 0/cover;
-
-                clip: rect(0, 1000px, 500px, 0);
+                width: 1000px;
+                height: 600px;
 
             }
 
-            div > article:nth-child(2) {
+            body > div > article:nth-child(1) {
 
-                background: url("../imgs/bg_2.jpg") no-repeat 0 0/cover;
+                clip: rect(0,1000px, 600px,0);
 
-                clip: rect(0, 1000px, 500px, 250px);
+                background: url("../imgs/bg_1.jpg") no-repeat 0 0;
 
-            }
-
-            div > article:nth-child(3) {
-
-                background: url("../imgs/bg_3.jpg") no-repeat 0 0/cover;
-
-                clip: rect(0, 1000px, 500px, 500px);
+                background-size: 1000px 600px;
 
             }
 
-            div > article:nth-child(4) {
+            body > div > article:nth-child(2) {
 
-                background: url("../imgs/bg_4.jpg") no-repeat 0 0/cover;
+                clip: rect(0,1000px, 600px,250px);
 
-                clip: rect(0, 1000px, 500px, 750px);
+                background: url("../imgs/bg_2.jpg") no-repeat 0 0;
+
+                background-size: 1000px 600px;
 
             }
 
-            div > article > h1 {
+            body > div > article:nth-child(3) {
+
+                clip: rect(0,1000px, 600px,500px);
+
+                background: url("../imgs/bg_3.jpg") no-repeat 0 0;
+
+                background-size: 1000px 600px;
+
+            }
+
+            body > div > article:nth-child(4) {
+
+                clip: rect(0,1000px, 600px, 750px);
+
+                background: url("../imgs/bg_4.jpg") no-repeat 0 0;
+
+                background-size: 1000px 600px;
+
+            }
+
+            body > div > article > h1 {
+
+                margin-top: 30px;
+
+                margin-bottom: 80px;
 
                 text-align: center;
+
+                font: bold 32px sans-serif;
 
                 color: #fff;
 
             }
 
-            div > article > div {
+            body > div > article > div {
 
-                margin: 50px auto 0;
+                margin: 0 auto;
 
                 width: 600px;
-
                 height: 300px;
 
-                background: rgba(255,255,255,0.5);
+                background: rgba(255,255,255,.5);
 
             }
         </style>
@@ -101,124 +125,92 @@
 
             $(function () {
 
-                cliping();
+                //이벤트 선택할 요소
 
-                function cliping() {
+                var masks = $(".masks"); //집합객체
 
-                    //1.변수들 만들고
+                var container = $("#container");
 
-                    var container = $(".outer");
+                var maskDatas = [];
 
-                    var masks = $(".outer").children(".mask");
+                masks.each(function (i, v) {
 
-                    var masksLen = $(".outer")
-                        .children(".mask")
-                        .length;
+                    maskDatas.push({
+                        "left": container.width() / masks.length * i
+                    });
 
-                    //2.가상으로 좌측을 이동시킬 객체생성
+                });
 
-                    var maskData = [];
+                // doFlex(-1); on을 이용한 이벤트 사용할 때는 부모요소(container요소)가
+                // 부모요소.on("이벤트명1개","부모요소의자식선택자",function(){}); 부모요소.on({"이벤트1":function(){},
+                // "이벤트2":function(){}}, "부모요소의자식선택자");
+
+                container.on({
+                    "mouseenter": function () {
+
+                        //1.  내가 어디에 들어갔는지 알아내야 한다.
+
+                        doFlex($(this).index());
+
+                        //console.log( $(this).index() );
+
+                    },
+                    "mouseleave": function () {
+
+                        doFlex(-1);
+
+                    }
+                }, ".masks");
+
+                function doFlex(idx) {
+
+                    var w = container.width();
+
+                    var h = container.height();
+
+                    var lft;
+
+                    // console.log(w); 현재 마우스가 들어간 번호를 전달 받으면 내 것과 내것이 아닌 것들을 구분 한다. idx<숫자 ==> 오른쪽
+                    // 요소들이고 그 이외라면 내 것과 왼쪽 요소들이다.
 
                     masks.each(function (i, v) {
 
-                        maskData[i] = {
-                            left: 0
-                        }
+                        var _this = $(this);
 
-                    });
+                        if (idx == -1) {
 
-                    //3. 마우스 들어갔을 때, 나갔을 때 실행할 함수 지정
+                            lft = w / masks.length * i;
 
-                    $(".outer").on({
-                        "mouseenter": function () {
+                        } else if (idx < i) { //오른쪽으로 이동하는 아이들
 
-                            var index = $(this).index();
+                            lft = w * (1 - 0.1 * (masks.length - i));
 
-                            //console.log(index);
+                        } else { //왼쪽으로 이동하는 아이들
 
-                            doClip(index); //마우스가 들어가면 어쨌거나 양수이다.
-
-                        },
-                        "mouseleave": function () {
-
-                            doClip(-1); //마우스 나갈 때 는 음수로 지정
+                            lft = w * (0.1 * i);
 
                         }
 
-                    }, ".mask");
+                        //console.log("rect(0, "+w+"px,"+h+"px, "+lft+"px)");
 
-                    //함수 실행
+                        $(maskDatas[i])
+                            .stop(true, false)
+                            .animate({
+                                "left": lft
+                            }, {
+                                duration: 1000,
 
-                    function doClip(idx) {
+                                progress: function () {
 
-                        var w = container.width();
+                                    _this.css("clip", "rect(0, " + w + "px," + h + "px, " + this.left + "px)");
 
-                        var h = container.height();
+                                }
 
-                        masks.each(function (i, v) {
+                            }); //animate End
 
-                            var _this = $(this),
+                    }); // each End
 
-                                lft;
-
-                            if (idx == -1) {
-
-                                lft = w / masksLen * i
-
-                            } else if (idx < i) { //우측에 존재한다는 의미
-
-                                // 전체 10등분 했고 10개의 요소가 있다면, 첫번째는 움직이면 안되고, 두번째는 10%, 세번째는 20%.. 이런식으로 이동한다고 할 때
-                                // 1은 100%, 0.1은  10% 좌측의 이동위치는 전체 너비 w에서 * 백분률만큼 이동하면 된다. 현재 요소를 제외한 오른쪽 요소들은
-                                // 각각 가장 마지막쪽에 존재해야 한다. 예를 들어서 현재 요소가 7번째라면 8,9,10은 70%,80%,90%로 왼쪽이 이동해야 한다.
-                                // 그런데 여기서 요소는 4개만 존해한다. 2번째가 현재요소라면, 3, 4는 바로 80%, 90%로 이동해야 한다. 그렇기 때문에 현재
-                                // 요소에서 증가되어 2, 3, 4  순으로 커지는 요소들을 전체 크기에서 각각 빼면 각 수치는 점점 큰 숫자에서 0에 가까워지게 된다. 즉
-                                // 0에 가까운 수치가 된다면 100%(끝) 부분에 위치한다 수치가 크다면 점점 100%(끝) 부분에서 멀어져서 위치한다 그 숫자들을 백분율로
-                                // 표시산다면, 100% - 0을 빼면 완전 끝에 위치하는 것이다. 그 숫자들을 백분율로 표시산다면, 100% - 10%을 빼면 완전 끝에서
-                                // 10% 떨어져서 위치하는 것이다. 그 숫자들을 백분율로 표시산다면, 100% - 20%을 빼면 완전 끝에서 10% 떨어져서 위치하는
-                                // 것이다.
-
-                                lft = w * (1 - 0.1 * (masksLen - i)); //10등분해서 차례대로 끝으로 이동하는 방식 --> 전체 숫자에서 현재 숫자를 빼면 나머지 숫자가 남는다.
-
-                                // 전체개수 4라면, 첫번째는 4 가 남게 되고,                     두번째는 3 가 남게 되고,
-                                // 세번째는 2 가 남게 되고,                     네번째는 1  이 남는다.
-
-                            } else {
-
-                                lft = w * 0.03 * i; //원하는 백분률만큼 왼쪽의 크기 지정
-
-                            }
-
-                            $(maskData[i])
-                                .stop(true)
-                                .animate({
-                                    left: lft
-                                }, { //가상으로 좌측의 값으로 작동될 요소가 수치가 변하기 시작한다. 이 변화된 수치의 진행을
-
-                                    //progress가 맡아서 할 것이다.
-
-                                    duration: 500,
-
-                                    progress: function () {
-
-                                        var now = this.left;
-
-                                        _this.css({
-
-                                            // 각 숫자를 rect () 형식으로 건설
-
-                                            clip: 'rect(0px ' + w + 'px ' + h + 'px ' + now + 'px)'
-
-                                        });
-
-                                    }
-
-                                });
-
-                        });
-
-                    }
-
-                }
+                } //doFlex End
 
             });
         </script>
@@ -227,37 +219,47 @@
 
     <body>
 
-        <div class="outer">
+        <!--<h1>클리핑하기</h1> div>article.masks*4>h1+div-->
 
-            <article class="mask">
+        <div id="container">
 
-                <h1>메뉴1</h1>
+            <article class="masks">
 
-                <div></div>
+                <h1>메뉴 1</h1>
 
-            </article>
-
-            <article class="mask">
-
-                <h1>메뉴2</h1>
-
-                <div></div>
+                <div>
+                    들어갈 내용 1
+                </div>
 
             </article>
 
-            <article class="mask">
+            <article class="masks">
 
-                <h1>메뉴3</h1>
+                <h1>메뉴 2</h1>
 
-                <div></div>
+                <div>
+                    들어갈 내용 2
+                </div>
 
             </article>
 
-            <article class="mask">
+            <article class="masks">
 
-                <h1>메뉴4</h1>
+                <h1>메뉴 3</h1>
 
-                <div></div>
+                <div>
+                    들어갈 내용 3
+                </div>
+
+            </article>
+
+            <article class="masks">
+
+                <h1>메뉴 4</h1>
+
+                <div>
+                    들어갈 내용 4
+                </div>
 
             </article>
 
