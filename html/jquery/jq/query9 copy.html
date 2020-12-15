@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .outer{
+            position: relative;
+            border: 1px solid orange;
+            width:1600px;
+            height: 800px;
+
+        }
+        .moveBox{
+            position: absolute;
+            top: 0; left: 0;
+            width: 80px;height: 80px;
+            background: palevioletred;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(function(){            
+            $(".moveBox").click(function(){
+                var _fx, _this = $(this);
+                //전체 애니메이션은 실핼개수만큼 쌓이게 된다.
+                //쌓이는 애니메이션은 먼저 실행한 애니메이션이 끝나야 다음 애니메이션을 실행한다.
+                //이렇게 실행되는 애니메니션이 쌓이는 것을 fx라고한다.
+
+                //하나씩 애니메이션이 배열처럼 줄 서 있는 것을 queue(큐)라고 한다.
+                //콜백함수. 함수내에서 함수를 부름
+                
+                $(this).animate({left:1500},{duration:1000, queue:false},function(){ //queue false는 fx에 들어가지 않겠다는것.
+                    
+                    //jQurey 객체가 애니메이션이 걸려있는 상황에서
+                    //jQuery객체.queue("fx"); -->애니메이션 관이하는 fx객체를 return
+                    _fx = $(this).queue("fx");
+                    $("h1>span").text(_fx.length);
+                }).animate({width:150},{duration:1000, queue:true},function(){
+                    $("h1>span").text(_fx.length);
+                }).animate({height:150},{duration:1000, queue:true},function(){
+                    $("h1>span").text(_fx.length);
+                }).animate({top:650},{duration:1000, queue:true},function(){
+                    $("h1>span").text(_fx.length);
+
+                    //queue를 다 false하면 동시에 애니메이션이 일어남, 하지만 특정에만 false를 할경우 그부분만 한번에 작동, 하지만 flase를 넣을시 다른 단계에서도 true, false를 꼭 작성해야됨 
+                }); //moveBox click end
+                
+                $("h2").click(function(){
+                    //$(".moveBox").stop();
+                    $(".moveBox").stop(true);
+                    //그냥 stop을 사용하면 중간 실행중인 에니메이션을 멈추는것
+                    //stop(true)이런식으로 작성시 전체 애니메이션 스탑
+                    //stop()의 기본값은 stop(false,false)
+                    //queue false는 fx에서 빠져나오는것 ,clearQueue는 아예 삭제 
+
+                    //clearQueue를 false, jumpToEnd true의 경우 단계는 진행하지만 마지막 단계로 한번에 넘어감.
+
+                }); //h2 click end
+                
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>애니메이션개수 : <span></span></h1>
+    <h2>애니메이션 멈춰라</h2>
+    <div class="outer">
+        <div class="moveBox"></div>
+    </div>
+</body>
+</html>

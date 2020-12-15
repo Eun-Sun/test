@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../reset.css">
+    <style>
+        /* reset연결안될때 꼭 하고 진행 
+        *{margin: 0; padding: 0;}
+        li{list-style: none;}
+        a{text-decoration: none;} */
+
+        div.bannerBox{
+            position: relative;
+            margin: 100px auto;
+            overflow: hidden;
+            width: 200px;
+            height: 50px;
+            border: 1px solid red;
+        }
+        div.bannerBox>ul.bannerList{
+            display: flex;
+            position: absolute;
+            left: 0; top: 0;
+            width: 500%; /* 보여줄 자식요소가 5개이기떼문에 5x */
+            height: 50px;
+        }
+        div.bannerBox>ul.bannerList>li{
+            flex: 1 1 auto;
+        }
+        div.bannerBox>ul.bannerList>li.first{background: lightgoldenrodyellow;}
+        div.bannerBox>ul.bannerList>li.second{background: lightpink;}
+        div.bannerBox>ul.bannerList>li.third{background: lightseagreen;}
+        div.bannerBox>ul.bannerList>li.fourth{background: lightskyblue;}
+        div.bannerBox>ul.bannerList>li.fifth{background: lightcoral;}
+
+        p.btnPrev{}
+        p.btnNext{}
+
+        ul.bullet{}
+        ul.bullet>li{}
+        ul.bullet>li.on{
+            background: lightslategray;
+            color: #ffffff;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(function(){
+            var banner = {idx:0, len:$(".bannerList").children().length}
+            $(".btnNext").click(function(){
+                
+                banner.idx++;
+                if(banner.idx>=banner.len){
+                    banner.idx = 0;
+                }
+                $(".bullet").children("li").eq(banner.idx).addClass("on").siblings().removeClass("on");
+                $(".bannerList").stop(true,true).animate({"left":"-100%"},2000,function(){
+                    
+                    var $this = $(this);
+                    $(".bannerList").children().first().appendTo($this);
+                    $this.css("left",0);
+                }); //fx에 애니메이터가 쌓임. 먼저하기때문에
+            });
+            $(".btnPrev").click(function(){
+
+                banner.idx--;
+                if(banner.idx<0){
+                    banner.idx = banner.len-1;
+                }
+                $(".bullet").children("li").eq(banner.idx).addClass("on").siblings().removeClass("on");
+
+                var $bannerList = $(".bannerList");
+                $bannerList.children().last().prependTo($bannerList);
+                $bannerList.css("left","-100%");
+                $bannerList.stop(false,false).animate({"left":0},2000); //여기서 stop(true,false)자리에서 앞자리는 true,false상관없음 쌓여있는게 없어서!
+            }); //fx에 애니메이터가 쌓이지 않음. 애니메이터가 한번만 걸려있기때문에
+            $(".bullet").children("li").click(function(){
+                var idx = $(this).index();
+            });
+        });
+    </script>
+</head>
+<body>
+    <!-- div.bannerBox>ul.bannerList>li{$}*5+p.btnPrev{이전}+p.btnNext{다음}+ul.bullet>li{$}*5 -->
+    <div class="bannerBox">
+        <ul class="bannerList">
+            <li class="first">1번 배너</li>
+            <li class="second">2번 배너</li>
+            <li class="third">3번 배너</li>
+            <li class="fourth">4번 배너</li>
+            <li class="fifth">5번 배너</li>
+        </ul>
+    </div>
+    <p class="btnPrev">이전</p>
+    <p class="btnNext">다음</p>
+    <ul class="bullet">
+        <li class="on">1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+        <li>5</li>
+    </ul>
+    
+    
+</body>
+</html>
