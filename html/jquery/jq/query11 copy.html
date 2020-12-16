@@ -17,37 +17,45 @@
             margin-top: 100px;
             margin-bottom: 30px;
             overflow: hidden;
-            width: 200px;
-            height: 50px;
+            width: 800px;
+            height: 150px;
             border: 1px solid red;
         }
         div.bannerBox>ul.bannerList{
             display: flex;
             position: absolute;
             left: 0; top: 0;
-            width: 500%; /* 보여줄 자식요소가 5개이기떼문에 5x */
-            height: 50px;
+            /* width: 500%; 보여줄 자식요소가 5개이기때문에 5x */
+            height: 150px;
         }
         div.bannerBox>ul.bannerList>li{
             flex: 1 1 auto;
+            width: 200px;
+            height: 50px;
+            transition: all .3s ease;
+        }
+        div.bannerBox>ul.bannerList>li.on{
+            width: 400px;height: 150px;
+
         }
         div.bannerBox>ul.bannerList>li.first{background: lightgoldenrodyellow;}
         div.bannerBox>ul.bannerList>li.second{background: lightpink;}
         div.bannerBox>ul.bannerList>li.third{background: lightseagreen;}
         div.bannerBox>ul.bannerList>li.fourth{background: lightskyblue;}
         div.bannerBox>ul.bannerList>li.fifth{background: lightcoral;}
+        div.bannerBox>ul.bannerList>li.sixth{background: lightgreen;}
 
         p{
             position: absolute;
-            top: 115px;
+            top: 150px;
             font-size: 20px;
             color: lightslategray;
         }
         p.btnPrev{
-            left: calc(50% - 150px);
+            left: calc(50% - 450px);
         }
         p.btnNext{
-            right: calc(50% - 150px);
+            right: calc(50% - 450px);
 
         }
 
@@ -72,7 +80,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
         $(function(){
-            var banner = {idx:0, len:$(".bannerList").children().length, auto:setInterval(middleFn,3000)}
+            var banner = {  w:200, //li 각각의 width
+                            expW:200, //li중 큰아이의 추가 넓이
+                            idx:1, len:$(".bannerList").children().length //, auto:setInterval(middleFn,3000)
+                        }
 
             function middleFn(){
                 banner.idx++;
@@ -84,7 +95,7 @@
             }
 
 
-            $(".bannerList").css("width", banner.len*100+"%"); //부모 넓이 자동지정되게끔
+            $(".bannerList").css("width", (banner.len*banner.w+banner.expW)+"px"); //부모 넓이 자동지정되게끔
 
             for(var i =0; i<banner.len; i++){
                 if(i==0){
@@ -95,20 +106,20 @@
             }//불릿 배너 갯수에 맞게 자동 입력
 
             $(".btnNext").click(function(){
-                clearInterval(banner.auto);
+                //clearInterval(banner.auto);
                 middleFn();
-                banner.auto = setInterval(middleFn,3000);
+                //banner.auto = setInterval(middleFn,3000);
             });
 
             $(".btnPrev").click(function(){
-                clearInterval(banner.auto);
+                //clearInterval(banner.auto);
                 banner.idx--;
                 if(banner.idx<0){
                     banner.idx = banner.len-1;
                 }
                 doBullet();
                 doPrev();
-                banner.auto = setInterval(middleFn,3000);                
+                //banner.auto = setInterval(middleFn,3000);                
             }); //fx에 애니메이터가 쌓이지 않음. 애니메이터가 한번만 걸려있기때문에
 
 
@@ -132,23 +143,29 @@
 
             function doBullet(){
                 $(".bullet").children("li").eq(banner.idx).addClass("on").siblings().removeClass("on");
-            }//햐당 배너의 불릿에 색들어오게하기
+            }//해당 배너의 불릿선택시 불릿 색 변경됨
 
             function doPrev(){
                 var $bannerList = $(".bannerList");
                 $bannerList.children().last().prependTo($bannerList);
-                $bannerList.css("left","-100%");
+                $bannerList.css("left",-banner.w);
                 $bannerList.stop(false,false).animate({"left":0},2000); //여기서 stop(true,false)자리에서 앞자리는 true,false상관없음 쌓여있는게 없어서!
+                
+                $(".bannerList").children("li.on").prev().addClass("on").siblings().removeClass("on");
             }//이전으로 가는함수
 
             function doNext(){
-                $(".bannerList").stop(true,true).animate({"left":"-100%"},2000,function(){
+                $(".bannerList").stop(true,true).animate({"left":-banner.w},2000,function(){
                     
                     var $this = $(this);
                     $(".bannerList").children().first().appendTo($this);
                     $this.css("left",0);
                 }); //fx에 애니메이터가 쌓임. 먼저하기때문에
+
+                //가운데 배너가 커지는 애니메이션
+                $(".bannerList").children("li.on").next().addClass("on").siblings().removeClass("on");
             }//다음으로 가는함수
+
         });//전체 제이쿼리 끝
     </script>
 </head>
@@ -157,10 +174,11 @@
     <div class="bannerBox">
         <ul class="bannerList">
             <li class="first">1번 배너</li>
-            <li class="second">2번 배너</li>
+            <li class="second on">2번 배너</li>
             <li class="third">3번 배너</li>
             <li class="fourth">4번 배너</li>
             <li class="fifth">5번 배너</li>
+            <li class="sixth">6번 배너</li>
         </ul>
     </div>
     <p class="btnPrev">⟪</p>
