@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../reset.css">
+    <style>
+        html,body{
+            height: 100%;
+        }
+        header{
+            display: flex;
+            justify-content: space-between; /*영쪽정렬*/
+            align-items: flex-end;/*세로로 container 하단에 붙도록 한다.*/
+            position: fixed;
+            left: 0; top: 0;
+            width: 100%; height: 80px;
+            background: rgb(209, 255, 209);
+        }
+        header>h1{
+            flex: 0 0 200px; /* 200(로고) + nav(1000)의 크기를 제외한 여유공간의 값을 전혀 가져가지 랂는다. 즉, 여유공간이 있어도 커지지않고 작아지지도 않는다.*/
+            height: 50px;
+            background: lightyellow;
+            color: #606060;
+        }
+        header>nav{
+            flex: 0 0 1000px; /* 200(로고) + nav의 크기(1000)를 제외한 여유공간의 값을 전혀 가져가지 랂는다. 즉, 여유공간이 있어도 커지지않고 작아지지도 않는다.*/
+            height: 50px;
+        }
+        header>nav>ul{
+            display: flex;
+            height: 50px;
+        }
+        header>nav>ul>li{
+            flex: 1 1 auto;
+            background: rgb(243, 237, 255);
+        }
+        header>nav>ul>li:nth-child(odd){
+            background: rgb(255, 240, 240);
+        }
+        header>nav>ul>li>a{
+            display: flex; /*a요소 내부에 있는 글자를 가운데 보내기 위한 방편*/
+            justify-content: center;
+            align-items: center;
+            height: 50px;
+        }
+        section{
+            box-sizing:border-box; 
+            padding-top: 100px; padding-left: 50px;
+            height: 100%;}
+        section:nth-of-type(1){background: lavender;}
+        section:nth-of-type(2){background: lavenderblush;}
+        section:nth-of-type(3){background: lightblue;}
+        section:nth-of-type(4){background: lightcyan;}
+        section:nth-of-type(5){background: lightgrey;}
+        section>h1{font:bold 32px sans-serif; color: #fff;}
+        section>p{color: rgb(150, 150, 150);}
+        </style>
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="jquery.mousewheel.min.js"></script>
+    <script>
+        $(function(){
+            var scrollEvnt = {
+                waitScroll:false
+            }
+            //스크롤은 개인별로 하는 방식이 모두 다르다.
+            //스크롤은 스크롤하는 중에 이벤트가 계속 발생한다.
+            //스크롤이 끝날때마다 하나씩 (위 또는 아래로) 이동시키면 된다.
+            $(window).on("scroll", function(){
+
+                if(scrollEvnt.waitScroll){ //null,undefined,0은 if 조건문에서 false값을 갖는다.
+                    clearTimeout(scrollEvnt.waitScroll);
+                }
+                scrollEvnt.waitScroll = setTimeout(function(){
+                    console.log("스크롤 끝났다.")
+                },40);
+            });
+
+
+        });
+    </script>
+</head>
+<body>
+    <!-- (header>h1+nav>h1+ul>li*5>a)+section*5>h1+p -->
+    <!-- (header>h1{로고}+nav>h1.hidden+ul>li*5>a[href="#"]{메뉴$})+section*5>h1{섹션$}+P{$번째 내용이랍니다.... 행복하세요} -->
+    <header>
+        <h1>로고</h1>
+        <nav>
+            <h1 class="hidden">주요카테고리</h1>
+            <ul>
+                <li><a href="#">메뉴1</a></li>
+                <li><a href="#">메뉴2</a></li>
+                <li><a href="#">메뉴3</a></li>
+                <li><a href="#">메뉴4</a></li>
+                <li><a href="#">메뉴5</a></li>
+            </ul>
+        </nav>
+    </header>
+    <section>
+        <h1>섹션1</h1>
+        <P>1번째 내용이랍니다.... 행복하세요</P>
+    </section>
+    <section>
+        <h1>섹션2</h1>
+        <P>2번째 내용이랍니다.... 행복하세요</P>
+    </section>
+    <section>
+        <h1>섹션3</h1>
+        <P>3번째 내용이랍니다.... 행복하세요</P>
+    </section>
+    <section>
+        <h1>섹션4</h1>
+        <P>4번째 내용이랍니다.... 행복하세요</P>
+    </section>
+    <section>
+        <h1>섹션5</h1>
+        <P>5번째 내용이랍니다.... 행복하세요</P>
+    </section>
+</body>
+</html>
