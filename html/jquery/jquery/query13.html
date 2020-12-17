@@ -3,10 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
     <link rel="stylesheet" href="../reset.css">
     <style>
         html,body{
             height: 100%;
+        }
+        /* 각브라우저병 스크롤바 없애기 */
+        body::-webkit-scrollbar{
+            display: none;
+        }
+        body::-moz-scrollbar{
+            display: none;
+        }
+        body::-o-scrollbar{
+            display: none;
+        }
+        body::-ms-scrollbar{
+            display: none;
         }
         header{
             display: flex;
@@ -55,28 +69,77 @@
         section:nth-of-type(5){background: lightgrey;}
         section>h1{font:bold 32px sans-serif; color: #fff;}
         section>p{color: rgb(150, 150, 150);}
-        </style>
-    <title>Document</title>
+    </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="jquery.mousewheel.min.js"></script>
+
+    <script src="script/jquery.mousewheel.min.js"></script>
     <script>
         $(function(){
+            //새로고침하면 '스크롤바'를 가장 처음으로 이동시키기
+            $("html, body").animate({"scrollTop":0},1);
+
             var scrollEvnt = {
-                waitScroll:false
+                count:0,
+                dir:"down",
+                waitScroll:false,
+                len:$("section").length,
+                scroll:true
             }
+
+            //네비데이션 클릭이벤트
+            $("nav").children("ul").children("li").click(function(){
+                //현재 몇번째를 클릭했는지를 알아내서 그 번지에 해당하는 요소로 이동하면 된다.
+                scrollEvnt.count = $(this).index(); 
+                //이때 카운터가 증가될 필요가 없음. 누르는곳이 위치이기때문에.
+                scrollEvnt.scroll = false;
+                moveBox();
+                
+            });
             //스크롤은 개인별로 하는 방식이 모두 다르다.
             //스크롤은 스크롤하는 중에 이벤트가 계속 발생한다.
             //스크롤이 끝날때마다 하나씩 (위 또는 아래로) 이동시키면 된다.
             $(window).on("mousewheel", function(e){
-                console.log(e.deltaY);
+                scrollEvnt.scroll = true;
+                var boxH = $("section").eq(0).height();
+                //mousewheel 플러그인 이벤트 객체e에서 deltaY, deltaX등 여러가지 속성이 있다. 이속성은 유저가 휠을 사용할 때 자동으로 나타나게 된다. 필요에 의해서 사용할 수도 있고 사용하지 않을 수도 있다.
+                //우리가 배경이미지를 움직였을 때 이벤트 객체에서는 document위에서 마우스가 위치한 x,y지점이 중요해서 이벤트 객체를 사용했듯이 이번에는 내가 스크롤, 마우스휠을 움직일땨 아래로 스크롤 했는지, 위로 스크롤 했는지 판단해주는
+                //이벤트 객체를 플러그인이 제공한다.
+                if(e.deltaY == -1){
+                    scrollEvnt.dir = "down";
+                }else{
+                    scrollEvnt.dir = "up";
+                }                
 
                 if(scrollEvnt.waitScroll){ //null,undefined,0은 if 조건문에서 false값을 갖는다.
                     clearTimeout(scrollEvnt.waitScroll);
                 }
                 scrollEvnt.waitScroll = setTimeout(function(){
-                },100);
+                    moveBox();
+                },25); //setTimeout끝
             });
 
+            function moveBox(){
+                if(scrollEvnt.scroll){
+                    if(scrollEvnt.dir == "down"){
+                        scrollEvnt.count++;
+                        if(scrollEvnt.count >=scrollEvnt.len){ //스크롤을 끝까지 내렸다면,
+                            scrollEvnt.count = scrollEvnt.len-1; //마지막에 고정한다.
+                        }
+                    }else{
+                        scrollEvnt.count--;
+                        if(scrollEvnt.count <0){ //스크롤을 처음으로 위치시켰다면,
+                            scrollEvnt.count =0; //처음위치에 고정한다.
+                        }
+                    }
+                }
+                //console.log(scrollEvnt.count);
+                //jQuery요소객체.offset()은 요소의 top과 left값을 갖고있는 객체를 return한다.
+                var nextTop = $("section").eq(scrollEvnt.count).offset().top;
+
+                //console.log(nextTop);
+                $("html,body").animate({"scrollTop":nextTop},500);
+                
+            }
 
         });
     </script>
@@ -97,23 +160,23 @@
             </ul>
         </nav>
     </header>
-    <section>
+    <section class="box1">
         <h1>섹션1</h1>
         <P>1번째 내용이랍니다.... 행복하세요</P>
     </section>
-    <section>
+    <section class="box2">
         <h1>섹션2</h1>
         <P>2번째 내용이랍니다.... 행복하세요</P>
     </section>
-    <section>
+    <section class="box3">
         <h1>섹션3</h1>
         <P>3번째 내용이랍니다.... 행복하세요</P>
     </section>
-    <section>
+    <section class="box4">
         <h1>섹션4</h1>
         <P>4번째 내용이랍니다.... 행복하세요</P>
     </section>
-    <section>
+    <section class="box5">
         <h1>섹션5</h1>
         <P>5번째 내용이랍니다.... 행복하세요</P>
     </section>
