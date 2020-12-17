@@ -67,14 +67,14 @@
             //스크롤은 개인별로 하는 방식이 모두 다르다.
             //스크롤은 스크롤하는 중에 이벤트가 계속 발생한다.
             //스크롤이 끝날때마다 하나씩 (위 또는 아래로) 이동시키면 된다.
-            $(window).on("scroll", function(){
+            $(window).on("mousewheel", function(e){
+                console.log(e.deltaY);
 
                 if(scrollEvnt.waitScroll){ //null,undefined,0은 if 조건문에서 false값을 갖는다.
                     clearTimeout(scrollEvnt.waitScroll);
                 }
                 scrollEvnt.waitScroll = setTimeout(function(){
-                    console.log("스크롤 끝났다.")
-                },40);
+                },100);
             });
 
 
