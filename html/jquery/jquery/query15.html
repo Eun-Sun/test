@@ -30,6 +30,7 @@
             margin: 0 auto; /*flex는 요소끼리 margin의 값을 auto로 지정하면, margin상하이던, margin좌우이던 모두 여분의 값을 나눠 갖는다.-즉 공통된 값을 나눠갖기 떄문에 justify-content:space-around와 같다. 물론, 하나의 요소에만 margin:auto도 가능하다. 그런 그 요소만 여분의 값을 좌우 또는 상하 또는 좌우로 공편하게 2등분 할것이다. */
             border: 1px solid #000;
             border-radius: 50%;
+            width: 80px; height: 80px;
 
             display: flex;
             justify-content: center;
@@ -57,6 +58,7 @@
             padding: 0;
             -webkit-appearance: none;
             appearance: none;
+            outline: none;
             width: 500px; height: 10px;
             border-radius: 5px;
             border: 1px solid #606060;
@@ -65,12 +67,28 @@
         .rangrVal>input[type="range"]::-webkit-slider-thumb{
             -webkit-appearance: none;
             appearance: none;
-            width: 20px; height: 20px; background: orangered;
+            width: 20px;height:20px;background: orangered;
             border-radius: 50%;
         } 
-        .rangrVal>p{}
+        .rangrVal>p{
+            width: 60px; height: 30px;
+            border-radius: 5px;
+            background: lightgrey;
+            color: #606060;
+            text-align: center; line-height: 30px;
+        }
 
-        .rangrVal>.bulletBox{}
+        .rangrVal>.bulletBox{
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            height: 30px;
+            background: rgba(120, 120, 120, 1);
+        }
+        .rangrVal>.bulletBox>em{
+            display: block; height: 20px; width: 10px;
+            background: #fff;
+        }
         .rangrVal>.bulletBox>em:nth-child(1){}
         .rangrVal>.bulletBox>em:nth-child(2){}
         .rangrVal>.bulletBox>em:nth-child(3){}
@@ -81,8 +99,19 @@
     <script>
         $(function(){
             $("#rSlider").on("input",function(){
-                //$(this).next().text(this.value);
+                $(this).next().text(this.value);
+
                 $("#rangeSlider").css("left",-1*this.value*5);
+            });
+            $(".bulletBox").children("em").click(function(){
+                var len = $("#rangeSlider").children().length-1;
+                var idx = $(this).index();
+                //5는 left가 이동할 수 있는 width의 500.
+                //다만, 5로 쓴 이우는 100단위를 rSlider의 max를 통해서 return했기때문에 100단위를 생략
+                var val = 5*idx*(parseInt($("#rSlider").attr("max"))/len);
+                
+                $("#rangeSlider").animate({"left":-val},300);
+                $("#rSlider").attr("value",val/5).next().text(val/5);
             });
         
         });//jQuery 끝
